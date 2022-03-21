@@ -1,8 +1,15 @@
+import store from './store/store'
+import { Provider } from 'react-redux'
+
+import Pages from './pages/Pages'
+
 function App() {
     return (
-        <div className='App'>
-            <h1>Expense Tracker</h1>
-        </div>
+        <>
+            <Provider store={store}>
+                <Pages />
+            </Provider>
+        </>
     )
 }
 
