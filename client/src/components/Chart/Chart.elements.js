@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { cardStyles } from '../styles/Reusable.elements'
+import { cardStyles } from '../../styles/Reusable.elements'
 
 export const Section = styled.section`
     ${cardStyles};
