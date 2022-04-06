@@ -2,12 +2,18 @@ import ApexChart from 'react-apexcharts'
 
 import { Section } from './Chart.elements'
 
-export default function Chart() {
+export default function Chart({
+    expenseTotal,
+    savingsTotal,
+    otherTotal,
+    title,
+    loading,
+}) {
     const state = {
         series: [
             {
                 name: 'Total',
-                data: [400, 430, 448, 470, 540, 580],
+                data: [expenseTotal, savingsTotal, otherTotal],
             },
         ],
         options: {
@@ -31,30 +37,40 @@ export default function Chart() {
                 enabled: false,
             },
             xaxis: {
-                categories: [
-                    'Expenses',
-                    'Savings',
-                    'Car Insurance',
-                    'Food',
-                    'Subscriptions',
-                    'Gas',
-                ],
+                categories: ['Expenses', 'Savings', 'Other'],
             },
         },
     }
 
+    const total = expenseTotal + savingsTotal + otherTotal
+
+    console.log(total)
+
     return (
         <Section>
-            <div className='title'>
-                <h2>Transactions View</h2>
-            </div>
+            {loading ? (
+                'Fetching data...'
+            ) : total === 0 ? (
+                <>
+                    <div className='title'>
+                        <h2>{title}</h2>
+                    </div>
+                    <p>No transaction data</p>
+                </>
+            ) : (
+                <>
+                    <div className='title'>
+                        <h2>{title}</h2>
+                    </div>
 
-            <ApexChart
-                options={state.options}
-                series={state.series}
-                type='bar'
-                className='chart'
-            />
+                    <ApexChart
+                        options={state.options}
+                        series={state.series}
+                        type='bar'
+                        className='chart'
+                    />
+                </>
+            )}
         </Section>
     )
 }
