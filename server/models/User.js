@@ -20,10 +20,6 @@ const UserSchema = new Schema(
         picture: {
             type: String,
         },
-        transactions: {
-            type: [mongoose.Types.ObjectId],
-            ref: 'Transaction',
-        },
     },
     {
         timestamps: true,
