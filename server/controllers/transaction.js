@@ -36,3 +36,31 @@ module.exports.getAllTransactions = async (req, res) => {
         return res.status(500).json({ msg: error.message })
     }
 }
+
+// @route   GET api/transaction/:id/:limit/:category
+// @desc    Get transactions of user
+// @access  Private
+module.exports.getTransactions = async (req, res) => {
+    const { id, limit, category, page } = req.params
+    const pageLimit = Number(limit)
+    const skip = (page - 1) * pageLimit
+
+    try {
+        const count = await Transaction.find({
+            userId: id,
+            category: category,
+        }).countDocuments()
+        const transactions = await Transaction.find({
+            userId: id,
+            category: category,
+        })
+            .sort({
+                _id: -1,
+            })
+            .skip(skip)
+            .limit(pageLimit)
+        return res.status(200).json({ transactions, count, pageLimit })
+    } catch (error) {
+        return res.status(500).json({ msg: error.message })
+    }
+}

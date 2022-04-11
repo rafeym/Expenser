@@ -9,5 +9,6 @@ const router = express.Router()
 
 router.post('/', newTransaction)
 router.get('/:id', getAllTransactions)
+router.get('/:id/:limit/:category/:page', getTransactions)
 
 module.exports = router
