@@ -15,6 +15,10 @@ app.use(express.json({ limit: '50mb', extended: true }))
 app.use(morgan('dev'))
 app.use(cors())
 
+//Routes
+app.use('/api/auth', require('./routes/auth'))
+app.use('/api/transaction', require('./routes/transaction'))
+
 // Test Route
 app.get('/', (req, res) => {
     res.send('Test route for Expense Tracker')
