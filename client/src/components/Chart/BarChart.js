@@ -44,8 +44,6 @@ export default function Chart({
 
     const total = expenseTotal + savingsTotal + otherTotal
 
-    console.log(total)
-
     return (
         <Section>
             {loading ? (
