@@ -1,7 +1,14 @@
 const User = require('../models/User')
 const { OAuth2Client } = require('google-auth-library')
+const jwt = require('jsonwebtoken')
 
 const client = new OAuth2Client(process.env.GOOGLE_AUTH_CLIENT)
+
+const createToken = (info, token) => {
+    return jwt.sign({ info, token }, process.env.JWT_SECRET, {
+        expiresIn: '3h',
+    })
+}
 
 // @route   POST api/auth/googleAuth
 // @desc    Login user using google authentication
@@ -24,13 +31,21 @@ module.exports.googleLogin = async (req, res) => {
                 })
             } else {
                 if (user) {
+                    const { _id } = user
+                    const info = { name, email, picture, id: _id }
+                    const tok = createToken(info, token)
                     // User exists, generate token and send back user details
                     res.status(200).json({
-                        token,
+                        tok,
                     })
                 } else {
                     // User doesnt exist, create new user
                     let newUser = new User({ name, email, picture })
+
+                    const { _id } = newUser
+                    const info = { name, email, picture, id: _id }
+                    const tok = createToken(info, token)
+
                     newUser.save((err, data) => {
                         if (err) {
                             return res.status(400).json({
@@ -39,7 +54,7 @@ module.exports.googleLogin = async (req, res) => {
                         }
 
                         res.status(200).json({
-                            token,
+                            tok,
                         })
                     })
                 }
