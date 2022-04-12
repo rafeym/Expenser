@@ -1,11 +1,20 @@
 import { useState } from 'react'
+
 import moment from 'moment'
+import { Link } from 'react-router-dom'
+
 import { Section } from './Transactions.elements'
 
 import { FiTrendingUp, FiTrendingDown } from 'react-icons/fi'
 import { HiArrowNarrowRight } from 'react-icons/hi'
 
-export default function Transactions({ title, transType, data = [], loading }) {
+export default function Transactions({
+    title,
+    transType,
+    data = [],
+    loading,
+    url,
+}) {
     const [state, setState] = useState(transType)
 
     return (
@@ -41,9 +50,6 @@ export default function Transactions({ title, transType, data = [], loading }) {
                                                 {moment(
                                                     transaction.date
                                                 ).fromNow()}
-                                                {/* {moment(transaction.date).format(
-                                            'MMM Do YY'
-                                        )} */}
                                             </h5>
                                         </div>
                                     </div>
@@ -61,9 +67,9 @@ export default function Transactions({ title, transType, data = [], loading }) {
                     </>
                 )}
             </div>
-            <a className='view' href='#'>
+            <Link className='view' to={url}>
                 View all <HiArrowNarrowRight />
-            </a>
+            </Link>
         </Section>
     )
 }

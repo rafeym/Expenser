@@ -2,18 +2,12 @@ import ApexChart from 'react-apexcharts'
 
 import { Section } from './Chart.elements'
 
-export default function Chart({
-    expenseTotal,
-    savingsTotal,
-    otherTotal,
-    title,
-    loading,
-}) {
+export default function Chart({ expenseTotal, savingsTotal, title, loading }) {
     const state = {
         series: [
             {
                 name: 'Total',
-                data: [expenseTotal, savingsTotal, otherTotal],
+                data: [expenseTotal, savingsTotal],
             },
         ],
         options: {
@@ -37,12 +31,12 @@ export default function Chart({
                 enabled: false,
             },
             xaxis: {
-                categories: ['Expenses', 'Savings', 'Other'],
+                categories: ['Expenses', 'Savings'],
             },
         },
     }
 
-    const total = expenseTotal + savingsTotal + otherTotal
+    const total = expenseTotal + savingsTotal
 
     return (
         <Section>

@@ -8,7 +8,6 @@ import { Section, ResponsiveNav } from './Sidebar.elements'
 
 import { MdSpaceDashboard } from 'react-icons/md'
 import { IoIosCreate } from 'react-icons/io'
-import { GiReceiveMoney } from 'react-icons/gi'
 import { IoSettings, IoStatsChart } from 'react-icons/io5'
 import { FiLogOut, FiTrendingDown } from 'react-icons/fi'
 import { GiHamburgerMenu } from 'react-icons/gi'
@@ -70,12 +69,6 @@ export default function Sidebar() {
                                 </Link>
                             </li>
                             <li>
-                                <Link to='/other'>
-                                    <GiReceiveMoney />
-                                    <span> Other</span>
-                                </Link>
-                            </li>
-                            <li>
                                 <Link to='/dashboard'>
                                     <IoSettings />
                                     <span> Settings</span>
@@ -122,12 +115,6 @@ export default function Sidebar() {
                             <Link to='/savings'>
                                 <IoStatsChart />
                                 <span> Savings</span>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to='/other'>
-                                <GiReceiveMoney />
-                                <span> Other</span>
                             </Link>
                         </li>
                         <li>
