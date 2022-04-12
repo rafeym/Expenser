@@ -1,10 +1,5 @@
 import jwt_decode from 'jwt-decode'
-import {
-    LOGIN_REQUEST,
-    LOGIN_SUCCESS,
-    LOGIN_FAIL,
-    LOGOUT,
-} from '../actions/types'
+import { LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT } from '../actions/types'
 
 const initState = {
     user: null,
@@ -24,17 +19,19 @@ const verifyToken = (token) => {
     }
 }
 
-const token = localStorage.getItem('token')
+const tok = localStorage.getItem('token')
 
-if (token) {
-    const decoded = verifyToken(token)
+if (tok) {
+    const decoded = verifyToken(tok)
+    const { info, token } = decoded
     if (decoded) {
         initState.token = token
-        const { name, picture, email } = decoded
+        const { name, picture, email, id } = info
         initState.user = {
             name,
             picture,
             email,
+            id: id,
         }
     }
 }
@@ -44,13 +41,19 @@ export const userReducer = (state = initState, action) => {
     switch (type) {
         case LOGIN_SUCCESS:
             const decoded = verifyToken(payload)
+
+            const { info, token } = decoded
+
+            const { name, picture, email, id } = info
+
             return {
                 ...state,
-                token: payload,
+                token: token,
                 user: {
-                    name: decoded.name,
-                    email: decoded.email,
-                    picture: decoded.picture,
+                    name,
+                    picture,
+                    email,
+                    id,
                 },
             }
         case LOGOUT:
