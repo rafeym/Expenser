@@ -27,17 +27,19 @@ const Dashboard = () => {
 
     const dispatch = useDispatch()
 
+    let page = 1
+
     useEffect(() => {
         async function getExpenses() {
             const limit = 5
             const category = 'expense'
-            await dispatch(getExpensesAction(user.id, limit, category))
+            await dispatch(getExpensesAction(user.id, limit, category, page))
             setLoading(false)
         }
         async function getSavings() {
             const limit = 5
             const category = 'savings'
-            await dispatch(getSavingsAction(user.id, limit, category))
+            await dispatch(getSavingsAction(user.id, limit, category, page))
             setLoading(false)
         }
 
