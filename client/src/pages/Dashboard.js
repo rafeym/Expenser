@@ -1,41 +1,107 @@
-import { useDispatch, useSelector } from 'react-redux'
-import { userLogoutAction } from '../store/actions/userActions'
+import { useEffect, useState } from 'react'
+
+import {
+    getAllTransactionsAction,
+    getExpensesAction,
+    getSavingsAction,
+} from '../store/actions/transactionActions'
+import { useSelector, useDispatch } from 'react-redux'
 
 import Sidebar from '../components/Sidebar/Sidebar'
 import Navbar from '../components/Navbar/Navbar'
 import Analytic from '../components/Analytic/Analytic'
 import FAQ from '../components/FAQ/FAQ'
 import Transactions from '../components/Transactions/Transactions'
-import LineChart from '../Chart/LineChart'
-import BarChart from '../Chart/BarChart'
+import LineChart from '../components/Chart/LineChart'
+import BarChart from '../components/Chart/BarChart'
 
-import styled from 'styled-components'
+import { Div, Section } from '../styles/Reusable.elements'
 
 const Dashboard = () => {
-    const dispatch = useDispatch()
-    const { user } = useSelector((state) => state.userReducer)
+    const [loading, setLoading] = useState(true)
 
-    const logout = () => {
-        dispatch(userLogoutAction())
-    }
+    const { user } = useSelector((state) => state.userReducer)
+    const { expense, savings, allTransactions } = useSelector(
+        (state) => state.transactionReducer
+    )
+
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        async function getExpenses() {
+            const limit = 5
+            const category = 'expense'
+            await dispatch(getExpensesAction(user.id, limit, category))
+            setLoading(false)
+        }
+        async function getSavings() {
+            const limit = 5
+            const category = 'savings'
+            await dispatch(getSavingsAction(user.id, limit, category))
+            setLoading(false)
+        }
+
+        getExpenses()
+        getSavings()
+    }, [user.id])
+
+    useEffect(() => {
+        async function getAllTransactions() {
+            await dispatch(getAllTransactionsAction(user.id))
+        }
+        getAllTransactions()
+    }, [user.id])
+
+    const exps = allTransactions.filter(
+        (transaction) => transaction.category === 'expense'
+    )
+    const expenseTotal = exps.reduce((curr, prev) => prev.amount + curr, 0)
+
+    const svngs = allTransactions.filter(
+        (transaction) => transaction.category === 'savings'
+    )
+    const savingsTotal = svngs.reduce((curr, prev) => prev.amount + curr, 0)
+
+    const balance = savingsTotal - expenseTotal
 
     return (
         <>
             <Div>
-                <Sidebar logout={logout} />
+                <Sidebar />
                 <Section>
                     <Navbar user={user} />
                     <div className='grid'>
                         <div className='row__one'>
-                            <Analytic />
+                            <Analytic
+                                expenseTotal={expenseTotal}
+                                savingsTotal={savingsTotal}
+                                balance={balance}
+                            />
                             <FAQ />
                         </div>
                         <div className='row__two'>
-                            <Transactions title='Expenses' transType={false} />
-                            <Transactions title='Savings' transType={true} />
+                            <Transactions
+                                title='Expenses'
+                                transType={false}
+                                data={expense}
+                                loading={loading}
+                                url='/expenses'
+                            />
+                            <Transactions
+                                title='Savings'
+                                transType={true}
+                                data={savings}
+                                loading={loading}
+                                url='/savings'
+                            />
 
                             <LineChart title='Monthly View' />
-                            <BarChart />
+                            <BarChart
+                                title='Transactions View'
+                                expenseTotal={expenseTotal}
+                                savingsTotal={savingsTotal}
+                                loading={loading}
+                            />
                         </div>
                     </div>
                 </Section>
@@ -45,41 +111,3 @@ const Dashboard = () => {
 }
 
 export default Dashboard
-
-const Div = styled.div`
-    position: relative;
-`
-
-const Section = styled.section`
-    margin-left: 18vw;
-    padding: 2rem;
-    height: 100%;
-    .grid {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        gap: 1rem;
-        margin-top: 2rem;
-        .row__one {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            height: 50%;
-            gap: 1rem;
-        }
-        .row__two {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            height: 50%;
-        }
-    }
-    @media screen and (min-width: 280px) and (max-width: 1080px) {
-        margin-left: 0;
-        .grid {
-            .row__one,
-            .row__two {
-                grid-template-columns: 1fr;
-            }
-        }
-    }
-`
