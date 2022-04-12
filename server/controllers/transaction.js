@@ -41,7 +41,7 @@ module.exports.getAllTransactions = async (req, res) => {
 // @desc    Get transactions of user
 // @access  Private
 module.exports.getTransactions = async (req, res) => {
-    const { id, limit, category, page } = req.params
+    const { id, limit, category, page = 1 } = req.params
     const pageLimit = Number(limit)
     const skip = (page - 1) * pageLimit
 
