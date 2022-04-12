@@ -64,3 +64,22 @@ module.exports.getTransactions = async (req, res) => {
         return res.status(500).json({ msg: error.message })
     }
 }
+
+// @route   DELETE api/transaction/:id/
+// @desc    Delete transaction
+// @access  Private
+module.exports.deleteTransaction = async (req, res) => {
+    const { id } = req.params
+
+    try {
+        const transaction = await Transaction.findById(id)
+
+        await Transaction.findByIdAndRemove(id)
+
+        return res
+            .status(200)
+            .json({ msg: 'Transaction removed!', transaction })
+    } catch (error) {
+        return res.status(500).json({ msg: error.message })
+    }
+}
